@@ -90,25 +90,39 @@ def greeting():
     '''
     )
 
+
 def take_order(customer_order):
     if customer_order.lower() == 'quit':
         exit()
-        return
+        return 'Thank you, come again!2'
     if customer_order.lower() == 'order':
         order_summary()
     else:
-        quantity = 1
-        split_order = str(customer_order).split()
-        # if len(split_order) == 1:
+        customer_amount_requested = 1
+        split_order = customer_order.split()
+
+        if len(split_order) == 1:
+            customer_food_requested = ''.join(split_order)
+        elif len(split_order) == 2:
+            customer_food_requested = split_order[0]
+            customer_amount_requested = split_order[1]
+
+        # if(customer_food_requested.isalpha and str(customer_amount_requested).isnumeric):
+
+        # else:
+        #     return 'Please enter a food name followed by an integer.'
 
         for item in BANK:
-            if item['food'].lower() == customer_order.lower():
-                item['quantity'] += quantity
-                return str(item['quantity']) + ' ' + str(item['food']) + 's were added to the order!'
+            if item['food'].lower() == customer_food_requested.lower():
+                item['quantity'] -= 1
+                ORDER['food_ordered'].append({customer_food_requested : customer_amount_requested})
+                ORDER['price_total'] += (item['price'] * int(customer_amount_requested))
+                return str(customer_amount_requested) + ' ' + str(customer_food_requested) + 's were added to the order!'
+
     return
 
-def order_price_total():
 
+def order_price_total():
     print('Your current order total:')
     print('$' + str(ORDER['price_total']))
     print('What else would you like?')
@@ -137,6 +151,7 @@ def exit():
 def run():
     greeting()
     order_loop()
+
 
 if __name__ == '__main__':
     run()
