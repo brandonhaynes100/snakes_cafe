@@ -1,7 +1,7 @@
 # snakes_cafe
 
 **Author**: Brandon Haynes
-**Version**: 1.0.0 
+**Version**: 1.0.0
 
 ## Overview
 1. When run, the program should print an intro message and the menu for the restaurant

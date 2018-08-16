@@ -1,190 +1,10 @@
 from textwrap import dedent
+from string import Template
+from food_bank import BANK
+from order import ORDER
 import sys
 
 WIDTH = 96
-BANK = [
-    {
-        'food_category': 'Appetizers',
-        'food': 'BBQ Wings',
-        'cost': 15,
-        'count': 0,
-    },
-    {
-        'food_category': 'Appetizers',
-        'food': 'Soup',
-        'cost': 5,
-        'count': 0,
-    },
-    {
-        'food_category': 'Appetizers',
-        'food': 'Unlimited Bread',
-        'cost': 8,
-        'count': 0,
-    },
-    {
-        'food_category': 'Appetizers',
-        'food': 'Onion Rings',
-        'cost': 6,
-        'count': 0,
-    },
-    {
-        'food_category': 'Appetizers',
-        'food': 'Limited Bread',
-        'cost': 4,
-        'count': 0,
-    },
-    {
-        'food_category': 'Appetizers',
-        'food': 'Cocktail Shrimp',
-        'cost': 11,
-        'count': 0,
-    },
-    {
-        'food_category': 'Entrees',
-        'food': 'Peking Duck',
-        'cost': 33,
-        'count': 0,
-    },
-    {
-        'food_category': 'Entrees',
-        'food': 'Sweet and Sour Pork',
-        'cost': 13,
-        'count': 0,
-    },
-    {
-        'food_category': 'Entrees',
-        'food': 'Baked Vegetable Platter',
-        'cost': 8,
-        'count': 0,
-    },
-    {
-        'food_category': 'Entrees',
-        'food': 'Sushi',
-        'cost': 11,
-        'count': 0,
-    },
-    {
-        'food_category': 'Entrees',
-        'food': 'Grilled Salmon',
-        'cost': 18,
-        'count': 0,
-    },
-    {
-        'food_category': 'Entrees',
-        'food': 'Chicken Parmesean',
-        'cost': 14,
-        'count': 0,
-    },
-    {
-        'food_category': 'Sides',
-        'food': 'French Fries',
-        'cost': 4,
-        'count': 0,
-    },
-    {
-        'food_category': 'Sides',
-        'food': 'Mashed Potatoes',
-        'cost': 5,
-        'count': 0,
-    },
-    {
-        'food_category': 'Sides',
-        'food': 'Hash Browns',
-        'cost': 3,
-        'count': 0,
-    },
-    {
-        'food_category': 'Sides',
-        'food': 'Baked Potato',
-        'cost': 3,
-        'count': 0,
-    },
-    {
-        'food_category': 'Sides',
-        'food': 'Latkes',
-        'cost': 7,
-        'count': 0,
-    },
-    {
-        'food_category': 'Sides',
-        'food': 'Potatoes Au Gratin',
-        'cost': 7,
-        'count': 0,
-    },
-    {
-        'food_category': 'Desserts',
-        'food': 'Hot Fudge Sundae',
-        'cost': 6,
-        'count': 0,
-    },
-    {
-        'food_category': 'Desserts',
-        'food': 'Pancakes',
-        'cost': 5,
-        'count': 0,
-    },
-    {
-        'food_category': 'Desserts',
-        'food': 'Cookies and Milk',
-        'cost': 4,
-        'count': 0,
-    },
-    {
-        'food_category': 'Desserts',
-        'food': 'Fluffernutter Sandwich',
-        'cost': 3,
-        'count': 0,
-    },
-    {
-        'food_category': 'Desserts',
-        'food': 'Ice Cream Moci',
-        'cost': 8,
-        'count': 0,
-    },
-    {
-        'food_category': 'Desserts',
-        'food': 'Bananas Foster',
-        'cost': 10,
-        'count': 0,
-    },
-    {
-        'food_category': 'Beverages',
-        'food': 'Coffee',
-        'cost': 2,
-        'count': 0,
-    },
-    {
-        'food_category': 'Beverages',
-        'food': 'Bubble Tea',
-        'cost': 4,
-        'count': 0,
-    },
-    {
-        'food_category': 'Beverages',
-        'food': 'Cola',
-        'cost': 2,
-        'count': 0,
-    },
-    {
-        'food_category': 'Beverages',
-        'food': 'Iced Tea',
-        'cost': 2,
-        'count': 0,
-    },
-    {
-        'food_category': 'Beverages',
-        'food': 'Green Tea'
-        'cost': 2,
-        'count': 0,
-    },
-    {
-        'food_category': 'Beverages',
-        'food': 'Pumpkin Spice Milkshake',
-        'cost': 40,
-        'count': 0,
-    },
-]
-
 
 def greeting():
     """Function which will greet the user when the application executes for
@@ -194,7 +14,6 @@ def greeting():
     **************************************
     **    Welcome to the Snakes Cafe!   **
     **    Please see our menu below.    **
-    **
     ** To quit at any time, type "quit" **
     **************************************
 
@@ -206,6 +25,9 @@ def greeting():
     Onion Rings                      $6.00
     Limited Bread                    $4.00
     Cocktail Shrimp                 $11.00
+    Spiced Lemon                    $14.00
+    Cornbread                        $5.00
+    Meat Bun                         $3.00
 
     Entrees
     -------
@@ -215,6 +37,9 @@ def greeting():
     Sushi                           $11.00
     Grilled Salmon                  $18.00
     Chicken Parmesean               $14.00
+    Avocado Toast                    $2.00
+    Turducken                       $32.00
+    Monster Steak                   $48.00
 
     Sides
     -----
@@ -224,6 +49,9 @@ def greeting():
     Baked Potato                     $3.00
     Latkes                           $7.00
     Potatoes Au Gratin               $7.00
+    Deluxe Condiments                $2.00
+    Spinach                          $2.00
+    Vegetable Bun                    $7.00
 
     Desserts
     --------
@@ -233,6 +61,9 @@ def greeting():
     Fluffernutter Sandwich           $3.00
     Ice Cream Mochi                  $8.00
     Bananas Foster                  $10.00
+    Banana Split                     $7.00
+    Stolen Candy                     $1.00
+    Cookie Bun                       $9.00
 
     Beverages
     ------
@@ -242,21 +73,58 @@ def greeting():
     Iced Tea                         $2.00
     Green Tea                        $2.00
     Pumpkin Spice Milkshake         $40.00
+    Ninja Water                      $6.00
+    Better Coffee                    $3.00
+    Runny Yogurt                     $5.00
 
-    ***********************************
-    ** What would you like to order? **
-    ***********************************
-    ''')
+    **************************************
+    *** What would you like to order? ****
 
-def take_order(food_order):
-    if food_order == 'quit':
+    Please select an option from the menu.
+
+    You may enter an integer after the
+     name of your option to add that
+     amount to your order
+
+    To quit at any time, type "quit"
+    '''
+    )
+
+def take_order(customer_order):
+    if customer_order.lower() == 'quit':
         exit()
         return
-    for item in BANK:
-      if item['food'].lower() == food_order.lower():
-        item['count'] += 1
-        return str(item['count']) + ' ' + str(item['food']) + 's were added to the order!'
-    return 'Please select an option from the menu.'
+    if customer_order.lower() == 'order':
+        order_summary()
+    else:
+        quantity = 1
+        split_order = str(customer_order).split()
+        # if len(split_order) == 1:
+
+        for item in BANK:
+            if item['food'].lower() == customer_order.lower():
+                item['quantity'] += quantity
+                return str(item['quantity']) + ' ' + str(item['food']) + 's were added to the order!'
+    return
+
+def order_price_total():
+
+    print('Your current order total:')
+    print('$' + str(ORDER['price_total']))
+    print('What else would you like?')
+
+
+def order_summary():
+    print('Your current order:')
+    print('What else would you like?')
+
+
+def order_loop():
+    customer_order = input()
+    while customer_order != 'quit':
+        print(take_order(customer_order))
+        order_price_total()
+        customer_order = input()
 
 
 def exit():
@@ -268,11 +136,7 @@ def exit():
 
 def run():
     greeting()
-    food_order = input()
-    while food_order != 'quit':
-      print(take_order(food_order))
-      food_order = input()
-
+    order_loop()
 
 if __name__ == '__main__':
     run()
