@@ -1,7 +1,7 @@
 from textwrap import dedent
 from string import Template
 from food_bank import BANK
-from order import ORDER
+from order import Order
 import sys
 
 WIDTH = 96
@@ -89,68 +89,67 @@ def greeting():
     To quit at any time, type "quit"
     '''
     )
+#    order_one = Order()
+#    order_one.add_item('cheeseburger', 2)
+#    order_one.food_ordered
+# => {'cheeseburger': 2}
 
-
-def take_order(customer_order):
+def take_order(order_object, customer_order):
     if customer_order.lower() == 'quit':
         exit()
-        return 'Thank you, come again!2'
+        return
     if customer_order.lower() == 'order':
-        order_summary()
+        crude_display_order()
     else:
-        customer_amount_requested = 1
+        quantity_requested = 1
         split_order = customer_order.split()
 
         if len(split_order) == 1:
-            customer_food_requested = ''.join(split_order)
+            item_requested = ''.join(split_order)
         elif len(split_order) == 2:
-            customer_food_requested = split_order[0]
-            customer_amount_requested = split_order[1]
-
-        # if(customer_food_requested.isalpha and str(customer_amount_requested).isnumeric):
-
-        # else:
-        #     return 'Please enter a food name followed by an integer.'
+            item_requested = split_order[0]
+            quantity_requested = int(split_order[1])
 
         for item in BANK:
-            if item['food'].lower() == customer_food_requested.lower():
-                item['quantity'] -= 1
-                ORDER['food_ordered'].append({customer_food_requested : customer_amount_requested})
-                ORDER['price_total'] += (item['price'] * int(customer_amount_requested))
-                return str(customer_amount_requested) + ' ' + str(customer_food_requested) + 's were added to the order!'
+            if item['food'].lower() == item_requested.lower():
+                order_object.add_item(item_requested, quantity_requested)
+                order_object.price_total += (item['price'] * int(quantity_requested))
+                return str(int(quantity_requested)) + ' ' + str(item_requested) + 's were added to the order!'
 
     return
 
 
-def order_price_total():
+def crude_price_total():
     print('Your current order total:')
     print('$' + str(ORDER['price_total']))
     print('What else would you like?')
 
 
-def order_summary():
+def crude_display_order():
     print('Your current order:')
     print('What else would you like?')
 
 
-def order_loop():
-    customer_order = input()
-    while customer_order != 'quit':
-        print(take_order(customer_order))
-        order_price_total()
-        customer_order = input()
+def order_loop(order_object):
+    customer_request = input()
+    while customer_request != 'quit':
+        print(take_order(order_object, customer_request))
+        # crude_price_total()
+        order_object.display_price_total()
+        customer_request = input()
 
 
 def exit():
     print(dedent('''
-      Thank you, come again!
+    Thank you, come again!
     '''))
     sys.exit()
 
 
 def run():
     greeting()
-    order_loop()
+    order_object = Order()
+    order_loop(order_object)
 
 
 if __name__ == '__main__':
