@@ -1,2 +1,2 @@
-from .snakes_cafe import *
+import snakes_cafe
 import pytest
